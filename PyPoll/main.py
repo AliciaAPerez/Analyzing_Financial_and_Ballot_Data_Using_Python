@@ -5,17 +5,17 @@ import csv
 # Path to collect data from the Resources folder
 pollpath = os.path.join("Resources", "election_data.csv")
 
-#data lists
-Vote_Total = 0
-Candidates = []
-Candidate_Votes = {}
-Winning_Candidate = 0
+#data variables and lists
+vote_total = 0
+candidates = []
+candidate_votes = {}
+winning_candidate = 0
 
-
-def Percentage(Candidate_Votes, Vote_Total):
-    Candidate_Percentage = Candidate_Votes / Vote_Total * 100
-    return round(Candidate_Percentage, 0)
-
+#function to calculate percentage
+def percentage(candidate_votes, vote_total):
+    candidate_percentage = candidate_votes / vote_total * 100
+    return round(candidate_percentage, 0)
+#
 #open csv file as read
 with open(pollpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=",")
@@ -23,42 +23,49 @@ with open(pollpath) as csvfile:
     csv_header = next(csvreader)
     
 #Calculations:
-# total number of votes cast    
+#total number of votes cast    
     for row in csvreader:
-        # Vote_Total = sum(1 for vote in csvreader)
-        Vote_Total += 1
+        vote_total += 1
                 
 #complete list of candidates who received votes        
-        Candidate = row[2]
-        if Candidate not in Candidates:
-            Candidates.append(Candidate)
-            Candidate_Votes[Candidate] = 0
-        Candidate_Votes[Candidate] = Candidate_Votes[Candidate] + 1
+        candidate = row[2]
+        if candidate not in candidates:
+            candidates.append(candidate)
+            candidate_votes[candidate] = 0
+        candidate_votes[candidate] = candidate_votes[candidate] + 1
 
+#start text file for results and do calculations
+#total vote output1 text file
 with open("Analysis/ElectionResults.txt", "w") as txtfile:
     output1 = (f"Election Results\n"
-        f"......................\n"
-        f"Total Votes {Vote_Total}\n"
-        f"......................\n"
+        f".........................\n"
+        f"Total Votes {vote_total}\n"
+        f".........................\n"
         )
     txtfile.write(output1)
+    #print for terminal
     print(output1)
-    for Candidate in Candidates: 
-        Votes = Candidate_Votes.get(Candidate)
-        if Votes > Winning_Candidate:
-            Winner = Candidate
-            Winning_Candidate = Votes
-        PRCT = Percentage(Votes, Vote_Total)
-        output2 = f"{Candidate}: {PRCT}% ({Votes})\n"
+
+    #loop for equations
+    for candidate in candidates: 
+        #total votes per candidate
+        votes = candidate_votes.get(candidate)
+        #calculate winner based on votes
+        if votes > winning_candidate:
+            winner = candidate
+            winning_candidate = votes
+        #calculate percentage per candidate
+        prct = percentage(votes, vote_total)
+        #print results per candidate
+        output2 = f"{candidate}: {prct}% ({votes})\n"
+        #must print here for terminal to print all candidates
         print(output2)
         txtfile.write(output2)
-    output3 = (f"......................\n"
-            f"Winner: {Winner}\n"
-            f"......................")
+
+    #print winner output 3 finishing text file
+    output3 = (f".........................\n"
+            f"Winner: {winner}\n"
+            f".........................")
     txtfile.write(output3)
+#last print for terminal
 print(output3)
-        
-#total number of votes each candidate won
-#percentage of votes each candidate won
-#winner of election based on popular vote
-#print to text file the results
