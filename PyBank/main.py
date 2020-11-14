@@ -9,7 +9,6 @@ bankpath = os.path.join("Resources", "budget_data.csv")
 months = 0
 months_change = 0
 net_total = 0
-changes_month_to_month = []
 change_sum = 0
 greatest_increase = 0
 greatest_decrease = 0
@@ -22,9 +21,8 @@ with open(bankpath) as csvfile:
     #set values for first row
     first_row = next(csvreader)
     prev_value = int(first_row[1])
-    #set value for months as we're skipping first line
+    #set value for months and total as we're skipping first line
     months += 1
-    #set total for months as we're skipping first ine
     net_total += int(first_row[1])
     
 #Calculations:
@@ -38,13 +36,10 @@ with open(bankpath) as csvfile:
         net_total += int(row[1])
 
 #calculate changes in profits/loss over entire preriod
-        #making a dictionary of date and changes
         #save date
         date = str(row[0])
-        changes_month_to_month.append(date)
         #find the change in profits
         changes = int(row[1]) - prev_value
-        changes_month_to_month.append(changes)
         #sum of changes
         change_sum += changes
         #greatest increase
